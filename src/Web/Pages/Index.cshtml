@@ -1,0 +1,28 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@section scripts {
+    <script type="text/javascript" src="~/lib/signalr/signalr.js"></script>
+
+    <script type="text/javascript">
+        var transport = signalR.TransportType.WebSockets;
+        var connection = new signalR.HubConnection(`http://${document.location.host}/test`, { transport: transport });
+
+        connection.on('welcomeMessage', (connectionId) => {
+            console.log(`Welcome, you are ${connectionId}`);
+        });
+
+        connection.on('newFriendConnected', friendId => {
+            console.log(`You have a new friend: ${friendId}`);
+        });
+
+        connection.on('friendLeft', friendId => {
+            console.log(`${friendId} left`);
+        });
+        
+        connection.start();
+    </script>
+}
